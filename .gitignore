@@ -1,0 +1,8 @@
+node_modules/
+__pycache__/
+images/
+_*
+!_images.json
+*.log
+fish.bak*.js
+.claude/
