@@ -32,6 +32,10 @@ def query(scis, tries=6):
             if e.code in (429, 500, 503) and a < tries - 1:
                 print("   %d, wait 65s..." % e.code); sys.stdout.flush(); time.sleep(65); continue
             raise
+        except Exception as e:   # 网络超时/断连：退避重试
+            if a < tries - 1:
+                print("   net err (%s), wait 20s..." % type(e).__name__); sys.stdout.flush(); time.sleep(20); continue
+            raise
 
 def main():
     scis = load_more_scis()

@@ -3,7 +3,7 @@
   const DATA = window.FISH_DATA || [];
 
   // 图片基址：本地开发用 "images"；上线时改为 jsDelivr CDN（图片存单独 img 仓库）
-  const IMG_BASE = "https://cdn.jsdelivr.net/gh/xujiann/1001fish-img@v1/images";
+  const IMG_BASE = "https://cdn.jsdelivr.net/gh/xujiann/1001fish-img@v2/images";
 
   // category metadata: label(zh/en), color var, representative emoji
   const CATS = {
@@ -34,7 +34,7 @@
          noresults:"未找到符合条件的鱼", reset:"重置筛选",
          lFamily:"科", lHabitat:"栖息水域", lSize:"最大体长",
          prev:"← 上一条", next:"下一条 →",
-         footer:"1001 种真实鱼类 · 从珊瑚礁的斑斓到深海的幽光", langbtn:"EN",
+         footer:"1001+ 种真实鱼类 · 从珊瑚礁的斑斓到深海的幽光", langbtn:"EN",
          share:"复制链接", copied:"已复制 ✓", photo:"图片：" },
     en:{ sub:" Fishes", subtitle:"From reef brilliance to the glow of the deep", species:"species", families:"families",
          search:"Search name, sci. name, family…", allFam:"All families", all:"All",
@@ -42,7 +42,7 @@
          noresults:"No fish match your filters", reset:"Reset filters",
          lFamily:"Family", lHabitat:"Habitat", lSize:"Max length",
          prev:"← Prev", next:"Next →",
-         footer:"1001 real fish species · from reef brilliance to the deep-sea glow", langbtn:"中",
+         footer:"1001+ real fish species · from reef brilliance to the deep-sea glow", langbtn:"中",
          share:"Copy link", copied:"Copied ✓", photo:"Photo: " },
   };
   let lang = localStorage.getItem("fish-lang") || "zh";
