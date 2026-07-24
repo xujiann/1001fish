@@ -35,7 +35,7 @@
          lFamily:"科", lHabitat:"栖息水域", lSize:"最大体长",
          prev:"← 上一条", next:"下一条 →",
          footer:"1001 种真实鱼类 · 从珊瑚礁的斑斓到深海的幽光", langbtn:"EN",
-         share:"复制链接", copied:"已复制 ✓" },
+         share:"复制链接", copied:"已复制 ✓", photo:"图片：" },
     en:{ sub:" Fishes", subtitle:"From reef brilliance to the glow of the deep", species:"species", families:"families",
          search:"Search name, sci. name, family…", allFam:"All families", all:"All",
          sortDefault:"Default", sortName:"By name", sortFamily:"By family", random:"Random fish",
@@ -43,7 +43,7 @@
          lFamily:"Family", lHabitat:"Habitat", lSize:"Max length",
          prev:"← Prev", next:"Next →",
          footer:"1001 real fish species · from reef brilliance to the deep-sea glow", langbtn:"中",
-         share:"Copy link", copied:"Copied ✓" },
+         share:"Copy link", copied:"Copied ✓", photo:"Photo: " },
   };
   let lang = localStorage.getItem("fish-lang") || "zh";
 
@@ -53,8 +53,18 @@
   let sort = "default";
   let query = "";
   let filtered = [];
-  let IMG = {};           // _images.json 清单：{id:{ok:true,...}}
-  const hasImg = id => IMG[id] && IMG[id].ok;
+  // 1001 条全部有图，直接渲染 <img>，加载失败时由 error 监听移除、露出 emoji 占位。
+  // 图片署名（Commons 文件名）按需懒加载，不进首屏关键路径。
+  let CREDITS = null, creditsPromise = null;
+  function loadCredits(){
+    if(CREDITS) return Promise.resolve(CREDITS);
+    if(!creditsPromise){
+      creditsPromise = fetch("credits.json").then(r=>r.ok?r.json():{})
+        .then(c=>{ CREDITS = c||{}; return CREDITS; })
+        .catch(()=>{ CREDITS = {}; return CREDITS; });
+    }
+    return creditsPromise;
+  }
 
   // ---- elements ----
   const $ = id => document.getElementById(id);
@@ -114,7 +124,7 @@
 
   function cardHTML(f){
     const m=CATS[f.cat];
-    const photo = hasImg(f.id) ? `<img class="card-photo" src="${IMG_BASE}/${f.id}.jpg" alt="" loading="lazy">` : "";
+    const photo = `<img class="card-photo" src="${IMG_BASE}/${f.id}.jpg" alt="" loading="lazy">`;
     return `<article class="card" data-id="${f.id}" style="--cardc:${m.color}" tabindex="0" role="button" aria-label="${nameOf(f)}">`+
       `<div class="card-img"><span class="card-cat">${lang==="zh"?m.zh:m.en}</span>`+
       `<span class="card-emoji">${emojiFor(f)}</span>${photo}</div>`+
@@ -148,6 +158,17 @@
     $("shown-count").textContent = filtered.length;
   }
 
+  // 图片署名：链回 Wikimedia Commons 原始文件页（CC 图片应署名）
+  function renderCredit(id){
+    const el = $("modal-credit"); if(!el) return;
+    const name = CREDITS && CREDITS[id];
+    if(!name){ el.innerHTML = ""; return; }
+    const disp = decodeURIComponent(name).replace(/_/g," ");
+    el.innerHTML = I18N[lang].photo +
+      `<a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(name)}" target="_blank" rel="noopener">${disp}</a>` +
+      " · Wikimedia Commons";
+  }
+
   // ---- modal ----
   let modalId = null, modalOpener = null;
   function openModal(id){
@@ -156,8 +177,12 @@
     modalId = id; const m=CATS[f.cat];
     const box = document.querySelector(".modal-box");
     box.style.setProperty("--cardc", m.color);
-    if(hasImg(f.id)){ $("modal-img").innerHTML = `<img src="${IMG_BASE}/${f.id}.jpg" alt="${nameOf(f)}">`; }
-    else { $("modal-img").innerHTML=""; $("modal-img").textContent = emojiFor(f); }
+    $("modal-img").innerHTML = `<img src="${IMG_BASE}/${f.id}.jpg" alt="${nameOf(f)}">`;
+    $("modal-img").firstChild.onerror = function(){
+      $("modal-img").innerHTML=""; $("modal-img").textContent = emojiFor(f);
+    };
+    $("modal-credit").innerHTML = "";
+    loadCredits().then(()=>{ if(modalId===id) renderCredit(id); });
     $("modal-cat").textContent = lang==="zh"?m.zh:m.en;
     $("modal-name").textContent = nameOf(f);
     $("modal-en").textContent = subOf(f);
@@ -273,8 +298,13 @@
   const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   toTop.onclick = ()=> window.scrollTo({top:0, behavior: reduceMotion ? "auto" : "smooth"});
 
+  // 卡片图加载失败时移除，露出 emoji 占位（error 不冒泡，用捕获）
+  gallery.addEventListener("error", e=>{
+    if(e.target && e.target.classList && e.target.classList.contains("card-photo")) e.target.remove();
+  }, true);
+
   // ---- init ----
   $("family-count").textContent = new Set(DATA.map(f=>f.family).filter(Boolean)).size;
-  fetch("_images.json").then(r=>r.ok?r.json():{}).then(m=>{IMG=m||{};}).catch(()=>{})
-    .finally(()=>{ applyLang(); applyUrlState(); });
+  applyLang();
+  applyUrlState();
 })();

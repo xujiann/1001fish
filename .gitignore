@@ -2,7 +2,7 @@ node_modules/
 __pycache__/
 images/
 _*
-!_images.json
+# _images.json 仅供本地管线，前端已改用 credits.json
 *.log
 fish.bak*.js
 .claude/
