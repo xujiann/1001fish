@@ -35,7 +35,8 @@
          lFamily:"科", lHabitat:"栖息水域", lSize:"最大体长",
          prev:"← 上一条", next:"下一条 →",
          footer:"1001+ 种真实鱼类 · 从珊瑚礁的斑斓到深海的幽光", langbtn:"EN",
-         share:"复制链接", copied:"已复制 ✓", photo:"图片：" },
+         share:"复制链接", copied:"已复制 ✓", photo:"图片：",
+         byFamily:"按科浏览", allFamiliesTitle:"按科浏览", famCount:"种", backToFamilies:"← 所有科" },
     en:{ sub:" Fishes", subtitle:"From reef brilliance to the glow of the deep", species:"species", families:"families",
          search:"Search name, sci. name, family…", allFam:"All families", all:"All",
          sortDefault:"Default", sortName:"By name", sortFamily:"By family", random:"Random fish",
@@ -43,7 +44,8 @@
          lFamily:"Family", lHabitat:"Habitat", lSize:"Max length",
          prev:"← Prev", next:"Next →",
          footer:"1001+ real fish species · from reef brilliance to the deep-sea glow", langbtn:"中",
-         share:"Copy link", copied:"Copied ✓", photo:"Photo: " },
+         share:"Copy link", copied:"Copied ✓", photo:"Photo: ",
+         byFamily:"By family", allFamiliesTitle:"Browse by family", famCount:"species", backToFamilies:"← All families" },
   };
   let lang = localStorage.getItem("fish-lang") || "zh";
 
@@ -98,6 +100,71 @@
     catTabs.querySelectorAll(".cat-tab").forEach(t=>t.onclick=()=>{
       activeCat=t.dataset.cat; buildTabs(); apply();
     });
+  }
+
+  // ---- 按科浏览：227 个科用下拉框太难逛，做成可视索引 ----
+  let famView = false;
+  let FAMS = null;   // [{zh,la,count,repId}]，按数量降序
+
+  function buildFamData(){
+    if(FAMS) return FAMS;
+    const map = new Map();
+    DATA.forEach(f=>{
+      if(!f.family) return;
+      let e = map.get(f.family);
+      if(!e){ e = {zh:f.family, la:f.family_en||"", count:0, repId:f.id}; map.set(f.family, e); }
+      e.count++;
+    });
+    FAMS = [...map.values()].sort((a,b)=> b.count-a.count || a.zh.localeCompare(b.zh,"zh"));
+    return FAMS;
+  }
+
+  function renderFamilyIndex(){
+    const el = $("family-index");
+    el.innerHTML = buildFamData().map(fm=>
+      `<button class="fam-card" data-fam="${fm.zh.replace(/"/g,"&quot;")}">`+
+        `<img class="fam-thumb" src="${IMG_BASE}/${fm.repId}.jpg" alt="" loading="lazy">`+
+        `<span class="fam-body">`+
+          `<span class="fam-zh">${lang==="zh"?fm.zh:(fm.la||fm.zh)}</span>`+
+          `<span class="fam-la">${lang==="zh"?fm.la:fm.zh}</span>`+
+          `<span class="fam-cnt">${fm.count} ${I18N[lang].famCount}</span>`+
+        `</span></button>`
+    ).join("");
+  }
+
+  function showFamilyIndex(){
+    famView = true; famFilter = ""; famSel.value = "";
+    renderFamilyIndex();
+    $("family-index").style.display = "grid";
+    $("family-header").style.display = "none";
+    gallery.style.display = "none";
+    noResults.style.display = "none";
+    if(sentinel) sentinel.style.display = "none";
+    $("family-view-btn").classList.add("active");
+  }
+
+  function hideFamilyIndex(){
+    famView = false;
+    $("family-index").style.display = "none";
+    gallery.style.display = "";
+    if(sentinel) sentinel.style.display = "";
+    $("family-view-btn").classList.remove("active");
+  }
+
+  function openFamily(fam){
+    const fm = buildFamData().find(x=>x.zh===fam);
+    hideFamilyIndex();
+    famFilter = lang==="zh" ? fam : (fm && fm.la ? fm.la : fam);
+    famSel.value = famFilter;
+    const h = $("family-header");
+    h.innerHTML = `<button class="fh-back" id="fh-back">${I18N[lang].backToFamilies}</button>`+
+      `<h2>${lang==="zh"?fm.zh:(fm.la||fm.zh)}</h2>`+
+      `<span class="fh-la">${lang==="zh"?fm.la:fm.zh}</span>`+
+      `<span class="fh-cnt">${fm.count} ${I18N[lang].famCount}</span>`;
+    h.style.display = "flex";
+    $("fh-back").onclick = showFamilyIndex;
+    apply();
+    window.scrollTo({top:0, behavior: reduceMotion ? "auto" : "smooth"});
   }
 
   // ---- filtering ----
@@ -219,6 +286,21 @@
   // ---- language ----
   function applyLang(){
     const t = I18N[lang];
+    // 已选中的科要跟着语言换名，否则筛选值对不上（中文科名 vs 拉丁科名）→ 结果为 0
+    if(famFilter){
+      const fm = buildFamData().find(x=>x.zh===famFilter || x.la===famFilter);
+      if(fm){
+        famFilter = lang==="zh" ? fm.zh : (fm.la || fm.zh);
+        const h = $("family-header");
+        if(h.style.display !== "none"){
+          h.innerHTML = `<button class="fh-back" id="fh-back">${t.backToFamilies}</button>`+
+            `<h2>${lang==="zh"?fm.zh:(fm.la||fm.zh)}</h2>`+
+            `<span class="fh-la">${lang==="zh"?fm.la:fm.zh}</span>`+
+            `<span class="fh-cnt">${fm.count} ${t.famCount}</span>`;
+          $("fh-back").onclick = showFamilyIndex;
+        }
+      }
+    }
     document.documentElement.lang = lang==="zh"?"zh-CN":"en";
     $("t-sub").textContent = t.sub;
     $("t-subtitle").textContent = t.subtitle;
@@ -232,6 +314,8 @@
     $("l-family").textContent=t.lFamily; $("l-habitat").textContent=t.lHabitat; $("l-size").textContent=t.lSize;
     $("prev-fish").textContent=t.prev; $("next-fish").textContent=t.next;
     $("modal-share").textContent="⎘ "+t.share;
+    $("family-view-btn").textContent=t.byFamily;
+    if(famView) renderFamilyIndex();
     document.getElementById("t-footer").textContent=t.footer;
     $("lang-toggle").textContent=t.langbtn;
     buildFamilies(); buildTabs(); apply();
@@ -243,9 +327,15 @@
     if(e.key!=="Enter"&&e.key!==" ") return;
     const c=e.target.closest(".card"); if(c){ e.preventDefault(); openModal(+c.dataset.id); }
   });
-  searchIn.addEventListener("input",()=>{ query=searchIn.value; clearBtn.style.display=query?"block":"none"; apply(); });
+  searchIn.addEventListener("input",()=>{ query=searchIn.value; clearBtn.style.display=query?"block":"none";
+    if(famView && query){ hideFamilyIndex(); $("family-header").style.display="none"; famFilter=""; famSel.value=""; }
+    apply(); });
   clearBtn.onclick=()=>{ searchIn.value=""; query=""; clearBtn.style.display="none"; apply(); };
-  famSel.onchange=()=>{ famFilter=famSel.value; apply(); };
+  famSel.onchange=()=>{ famFilter=famSel.value; if(famView) hideFamilyIndex(); $("family-header").style.display="none"; apply(); };
+  $("family-view-btn").onclick=()=>{ famView ? (hideFamilyIndex(), $("family-header").style.display="none", apply()) : showFamilyIndex(); };
+  $("family-index").addEventListener("click", e=>{
+    const c = e.target.closest(".fam-card"); if(c) openFamily(c.dataset.fam);
+  });
   sortSel.onchange=()=>{ sort=sortSel.value; apply(); };
   $("random-btn").onclick=()=>{ if(filtered.length) openModal(filtered[Math.floor(Math.random()*filtered.length)].id); };
   $("modal-close").onclick=closeModal;
@@ -261,7 +351,9 @@
     else{ const t=document.createElement("textarea"); t.value=link; document.body.appendChild(t); t.select();
       try{document.execCommand("copy");}catch(e){} t.remove(); done(); }
   };
-  $("reset-btn").onclick=()=>{ activeCat="";famFilter="";query="";searchIn.value="";clearBtn.style.display="none";buildTabs();buildFamilies();apply(); };
+  $("reset-btn").onclick=()=>{ activeCat="";famFilter="";query="";searchIn.value="";clearBtn.style.display="none";
+    if(famView) hideFamilyIndex(); $("family-header").style.display="none";
+    buildTabs();buildFamilies();apply(); };
   $("lang-toggle").onclick=()=>{ lang=lang==="zh"?"en":"zh"; localStorage.setItem("fish-lang",lang); applyLang(); };
   document.addEventListener("keydown",e=>{
     const modalOpen = $("modal").classList.contains("open");
