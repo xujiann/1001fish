@@ -6,3 +6,5 @@ _*
 *.log
 fish.bak*.js
 .claude/
+images_orig_backup/
+images_opt/

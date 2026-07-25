@@ -3,7 +3,7 @@
   const DATA = window.FISH_DATA || [];
 
   // 图片基址：本地开发用 "images"；上线时改为 jsDelivr CDN（图片存单独 img 仓库）
-  const IMG_BASE = "https://cdn.jsdelivr.net/gh/xujiann/1001fish-img@v2/images";
+  const IMG_BASE = "https://cdn.jsdelivr.net/gh/xujiann/1001fish-img@v3/images";
 
   // category metadata: label(zh/en), color var, representative emoji
   const CATS = {
