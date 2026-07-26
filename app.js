@@ -29,8 +29,8 @@
   // ---- i18n ----
   const I18N = {
     zh:{ sub:"种鱼", subtitle:"从珊瑚礁的斑斓到深海的幽光", species:"种", families:"科",
-         search:"搜索名称、学名、科…", allFam:"全部科", all:"全部",
-         sortDefault:"默认", sortName:"按名称", sortFamily:"按科", random:"随机一鱼",
+         search:"搜索名称、拼音、学名、目、科…", allFam:"全部科", all:"全部", orders:"目",
+         sortDefault:"默认", sortName:"按名称", sortOrder:"按目", sortFamily:"按科", random:"随机一鱼",
          noresults:"未找到符合条件的鱼", reset:"重置筛选",
          lOrder:"目", lFamily:"科", lHabitat:"栖息水域", lSize:"最大体长", allOrd:"全部目",
          prev:"← 上一条", next:"下一条 →",
@@ -38,8 +38,8 @@
          share:"复制链接", copied:"已复制 ✓", photo:"图片：",
          byFamily:"按科浏览", allFamiliesTitle:"按科浏览", famCount:"种", backToFamilies:"← 所有科" },
     en:{ sub:" Fishes", subtitle:"From reef brilliance to the glow of the deep", species:"species", families:"families",
-         search:"Search name, sci. name, family…", allFam:"All families", all:"All",
-         sortDefault:"Default", sortName:"By name", sortFamily:"By family", random:"Random fish",
+         search:"Search name, sci. name, order, family…", allFam:"All families", all:"All", orders:"orders",
+         sortDefault:"Default", sortName:"By name", sortOrder:"By order", sortFamily:"By family", random:"Random fish",
          noresults:"No fish match your filters", reset:"Reset filters",
          lOrder:"Order", lFamily:"Family", lHabitat:"Habitat", lSize:"Max length", allOrd:"All orders",
          prev:"← Prev", next:"Next →",
@@ -62,7 +62,7 @@
   function loadCredits(){
     if(CREDITS) return Promise.resolve(CREDITS);
     if(!creditsPromise){
-      creditsPromise = fetch("credits.json?v=202607261447").then(r=>r.ok?r.json():{})
+      creditsPromise = fetch("credits.json?v=202607262329").then(r=>r.ok?r.json():{})
         .then(c=>{ CREDITS = c||{}; return CREDITS; })
         .catch(()=>{ CREDITS = {}; return CREDITS; });
     }
@@ -194,6 +194,7 @@
       return true;
     });
     if(sort==="name") filtered.sort((a,b)=>nameOf(a).localeCompare(nameOf(b),lang==="zh"?"zh":"en"));
+    else if(sort==="order") filtered.sort((a,b)=>(a.order||"￿").localeCompare(b.order||"￿","zh") || a.id-b.id);
     else if(sort==="family") filtered.sort((a,b)=>(lang==="zh"?a.family:a.family_en).localeCompare(lang==="zh"?b.family:b.family_en,lang==="zh"?"zh":"en"));
     else filtered.sort((a,b)=>a.id-b.id);
     render();
@@ -321,8 +322,9 @@
     $("t-subtitle").textContent = t.subtitle;
     $("t-species").textContent = t.species;
     $("t-families").textContent = t.families;
+    $("t-orders").textContent = t.orders;
     searchIn.placeholder = t.search;
-    sortSel.options[0].text=t.sortDefault; sortSel.options[1].text=t.sortName; sortSel.options[2].text=t.sortFamily;
+    sortSel.options[0].text=t.sortDefault; sortSel.options[1].text=t.sortName; sortSel.options[2].text=t.sortOrder; sortSel.options[3].text=t.sortFamily;
     $("random-btn").textContent = t.random;
     document.getElementById("t-noresults").textContent = t.noresults;
     $("reset-btn").textContent = t.reset;
@@ -413,6 +415,7 @@
 
   // ---- init ----
   $("family-count").textContent = new Set(DATA.map(f=>f.family).filter(Boolean)).size;
+  $("order-count").textContent = new Set(DATA.map(f=>f.order).filter(Boolean)).size;
   applyLang();
   applyUrlState();
 })();

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>1001+ 种鱼 · 1001+ Fishes</title>
-<meta name="description" content="展示世界上 2000+ 种真实鱼类，从珊瑚礁到深海，每条都带真实照片。A growing bilingual gallery of 2000+ real fish species, each with a real photo.">
+<meta name="description" content="展示世界上 5000 种真实鱼类，92 目 474 科，从珊瑚礁到深海，每条都带真实照片。A bilingual gallery of 5000 real fish species across 92 orders and 474 families, each with a real photo.">
 <meta name="theme-color" content="#05141c">
 <link rel="canonical" href="https://xujiann.github.io/1001fish/">
 <link rel="manifest" href="manifest.webmanifest">
@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="1001鱼">
 <meta property="og:type" content="website">
 <meta property="og:title" content="1001+ 种鱼 · 1001+ Fishes">
-<meta property="og:description" content="世界上 2000+ 种真实鱼类，从珊瑚礁到深海，每条都带真实照片 · A growing bilingual gallery of 2000+ real fishes.">
+<meta property="og:description" content="世界上 5000 种真实鱼类 · 92 目 474 科 · 从珊瑚礁到深海，每条都带真实照片 · A bilingual gallery of 5000 real fishes.">
 <meta property="og:url" content="https://xujiann.github.io/1001fish/">
 <meta property="og:image" content="https://pic-1302017848.cos.ap-nanjing.myqcloud.com/fish/1.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -26,11 +26,11 @@
   "name": "1001+ 种鱼 · 1001+ Fishes",
   "alternateName": "1001+ Fishes",
   "url": "https://xujiann.github.io/1001fish/",
-  "description": "世界上 2000+ 种真实鱼类，从珊瑚礁到深海，每条都带真实照片。A growing bilingual gallery of 2000+ real fishes.",
+  "description": "世界上 5000 种真实鱼类，92 目 474 科，从珊瑚礁到深海，每条都带真实照片。A bilingual gallery of 5000 real fish species across 92 orders and 474 families.",
   "inLanguage": ["zh-CN", "en"]
 }
 </script>
-<link rel="stylesheet" href="style.css?v=202607261447">
+<link rel="stylesheet" href="style.css?v=202607262329">
 </head>
 <body>
 <header class="site-header">
@@ -42,6 +42,7 @@
     <div class="header-right">
       <div class="header-stats">
         <span class="stat"><strong id="shown-count">0</strong> <span id="t-species">种</span></span>
+        <span class="stat"><strong id="order-count">0</strong> <span id="t-orders">目</span></span>
         <span class="stat"><strong id="family-count">0</strong> <span id="t-families">科</span></span>
       </div>
       <button id="lang-toggle" class="lang-btn" title="语言 / Language">EN</button>
@@ -52,7 +53,7 @@
 <div class="toolbar">
   <div class="search-wrap">
     <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" id="search" placeholder="搜索名称、学名、科…" autocomplete="off">
+    <input type="text" id="search" placeholder="搜索名称、拼音、学名、目、科…" autocomplete="off">
     <button class="clear-btn" id="clear-search" title="清除">✕</button>
   </div>
   <div class="filter-row">
@@ -61,6 +62,7 @@
     <select id="sort-filter" aria-label="排序">
       <option value="default">默认</option>
       <option value="name">按名称</option>
+      <option value="order">按目</option>
       <option value="family">按科</option>
     </select>
     <button id="family-view-btn" class="btn-outline">按科浏览</button>
@@ -118,8 +120,8 @@
   <p class="footer-credit">图片 Wikimedia Commons · 数据 Wikidata / FishBase · 仅作教育科普展示</p>
 </footer>
 
-<script defer src="fish.js?v=202607261447"></script>
-<script defer src="app.js?v=202607261447"></script>
+<script defer src="fish.js?v=202607262329"></script>
+<script defer src="app.js?v=202607262329"></script>
 <!-- hub-nav: back to 1001×1001 -->
 <a id="hub-link" href="https://xujiann.github.io/" title="返回 1001 × 1001 · 万物收藏" aria-label="返回 1001×1001 万物收藏">1001 × 1001</a>
 <style>#hub-link{position:fixed;left:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:120;display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:100px;background:rgba(18,15,28,.85);border:1px solid rgba(255,255,255,.14);color:#e8e8f0;font:600 12.5px/1 system-ui,-apple-system,"Segoe UI","Noto Sans SC",sans-serif;text-decoration:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 4px 16px rgba(0,0,0,.35);transition:transform .2s,border-color .2s,background .2s}#hub-link::before{content:"\2756";color:#d9b26a;font-size:13px}#hub-link:hover{transform:translateY(-2px);border-color:rgba(217,178,106,.6);background:rgba(28,22,42,.95)}@media(max-width:640px){#hub-link{font-size:11.5px;padding:6px 11px;left:10px}}</style>
