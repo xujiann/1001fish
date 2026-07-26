@@ -90,10 +90,8 @@
 
   // ---- 目筛选（76 个目，比 442 个科更粗粒度、更好认）----
   function buildOrders(){
-    // 只列真正的「目」（以「目」字结尾/Latin -iformes 结尾），过滤掉早期采集残留的纲/超纲标签
-    const isOrder = o => /目$/.test(o) || /iformes$/i.test(o);
     const cnt = new Map();
-    DATA.forEach(f=>{ if(f.order && isOrder(f.order)) cnt.set(f.order,(cnt.get(f.order)||0)+1); });
+    DATA.forEach(f=>{ if(f.order) cnt.set(f.order,(cnt.get(f.order)||0)+1); });
     const list=[...cnt.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],"zh"));
     const cur=ordFilter;
     ordSel.innerHTML=`<option value="">${I18N[lang].allOrd}</option>`+
@@ -270,8 +268,7 @@
     $("modal-name").textContent = nameOf(f);
     $("modal-en").textContent = subOf(f);
     $("modal-sci").textContent = f.sci;
-    const ov = (lang==="zh"?(f.order||f.order_en):(f.order_en||f.order)) || "";
-    $("modal-order").textContent = (/目$/.test(ov)||/iformes$/i.test(ov)) ? ov : "—";
+    $("modal-order").textContent = (lang==="zh"?(f.order||f.order_en):(f.order_en||f.order)) || "—";
     $("modal-family").textContent = (lang==="zh"?f.family:f.family_en) || "—";
     $("modal-habitat").textContent = (lang==="zh"?f.habitat:f.habitat_en) || "—";
     $("modal-size").textContent = f.size || "—";

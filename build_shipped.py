@@ -36,17 +36,18 @@ def commons_name(v):
     return t[5:] if t.startswith("File:") else ""
 
 def load_orders():
-    """学名 -> (目中文名, 目拉丁名)。目信息来自采集原料的 cls 字段。"""
-    conv = {}
-    p = os.path.join(ROOT, "_harvest_raw.json")
-    zp = os.path.join(ROOT, "_orders_zh.json")
+    """学名 -> (目中文名, 目拉丁名)。
+       权威来源 _orders_of_sp.json（Wikidata 按 rank=目 逐种查得，4992/5000）。
+       ⚠️ 不要用 _harvest_raw.json 的 cls 字段：早期采集把「纲/超纲」也写进去了
+          （如 Actinopterygii 辐鳍鱼高纲），当成「目」展示会误导。"""
+    p = os.path.join(ROOT, "_orders_of_sp.json")
     if not os.path.exists(p): return {}
-    zh = json.load(open(zp, encoding="utf-8")) if os.path.exists(zp) else {}
-    for r in json.load(open(p, encoding="utf-8")):
-        la = r.get("cls") or ""
-        if not la or not la[0].isupper(): continue
-        conv[r["sci"].lower()] = (zh.get(la, ""), la)
-    return conv
+    out = {}
+    for sci, v in json.load(open(p, encoding="utf-8")).items():
+        zh, la = (v.get("zh") or ""), (v.get("la") or "")
+        if zh or la:
+            out[sci.lower()] = (zh, la)
+    return out
 
 def main():
     full = load("fish.full.js")

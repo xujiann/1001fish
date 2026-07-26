@@ -29,7 +29,7 @@ def query(scis, tries=6):
             with urllib.request.urlopen(req, timeout=120) as r:
                 return json.loads(r.read().decode("utf-8"))["results"]["bindings"]
         except urllib.error.HTTPError as e:
-            if e.code in (429, 500, 503) and a < tries - 1:
+            if e.code in (429, 500, 502, 503, 504) and a < tries - 1:
                 print("   %d, wait 65s..." % e.code); sys.stdout.flush(); time.sleep(65); continue
             raise
         except Exception as e:   # 网络超时/断连：退避重试
