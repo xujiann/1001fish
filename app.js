@@ -62,7 +62,7 @@
   function loadCredits(){
     if(CREDITS) return Promise.resolve(CREDITS);
     if(!creditsPromise){
-      creditsPromise = fetch("credits.json?v=202607262329").then(r=>r.ok?r.json():{})
+      creditsPromise = fetch("credits.json?v=202607270044").then(r=>r.ok?r.json():{})
         .then(c=>{ CREDITS = c||{}; return CREDITS; })
         .catch(()=>{ CREDITS = {}; return CREDITS; });
     }
@@ -76,8 +76,10 @@
         ordSel = $("order-filter"),
         noResults = $("no-results");
 
-  function nameOf(f){ return lang==="zh" ? f.name : f.name_en; }
-  function subOf(f){ return lang==="zh" ? f.name_en : f.name; }
+  // 73% 的物种没有英文俗名（很多冷门鱼学界就没起），英文模式退回学名；
+  // 否则模板插值会把 undefined 直接渲染成 "undefined" 字样。
+  function nameOf(f){ return lang==="zh" ? f.name : (f.name_en || f.sci); }
+  function subOf(f){ return (lang==="zh" ? f.name_en : f.name) || ""; }
 
   // ---- build family dropdown ----
   function buildFamilies(){
@@ -188,7 +190,8 @@
       if(famFilter && (lang==="zh"?f.family:f.family_en)!==famFilter) return false;
       if(ordFilter && f.order!==ordFilter) return false;
       if(q){
-        const hay = `${f.name} ${f.name_en} ${f.sci} ${f.family} ${f.family_en} ${f.habitat} ${f.habitat_en} ${f.order||""} ${f.order_en||""} ${f.py||""}`.toLowerCase();
+        const hay = [f.name,f.name_en,f.sci,f.family,f.family_en,f.habitat,f.habitat_en,f.order,f.order_en,f.py]
+          .filter(Boolean).join(" ").toLowerCase();
         if(!hay.includes(q)) return false;
       }
       return true;
@@ -213,7 +216,7 @@
       `<div class="card-body">`+
         `<div class="card-name">${nameOf(f)}</div>`+
         `<div class="card-en">${subOf(f)}</div>`+
-        `<div class="card-sci">${f.sci}</div>`+
+        `<div class="card-sci">${nameOf(f)===f.sci ? "" : f.sci}</div>`+
         `<div class="card-meta"><span>${(lang==="zh"?f.family:f.family_en)||""}</span><span>${f.size||""}</span></div>`+
       `</div></article>`;
   }
