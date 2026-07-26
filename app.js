@@ -29,7 +29,7 @@
   // ---- i18n ----
   const I18N = {
     zh:{ sub:"种鱼", subtitle:"从珊瑚礁的斑斓到深海的幽光", species:"种", families:"科",
-         search:"搜索名称、拼音、学名、目、科…", allFam:"全部科", all:"全部", orders:"目",
+         search:"搜索名称、拼音、学名、目、科…", allFam:"全部科", all:"全部", orders:"目", featured:"精选",
          sortDefault:"默认", sortName:"按名称", sortOrder:"按目", sortFamily:"按科", random:"随机一鱼",
          noresults:"未找到符合条件的鱼", reset:"重置筛选",
          lOrder:"目", lFamily:"科", lHabitat:"栖息水域", lSize:"最大体长", allOrd:"全部目",
@@ -38,7 +38,7 @@
          share:"复制链接", copied:"已复制 ✓", photo:"图片：",
          byFamily:"按科浏览", allFamiliesTitle:"按科浏览", famCount:"种", backToFamilies:"← 所有科" },
     en:{ sub:" Fishes", subtitle:"From reef brilliance to the glow of the deep", species:"species", families:"families",
-         search:"Search name, sci. name, order, family…", allFam:"All families", all:"All", orders:"orders",
+         search:"Search name, sci. name, order, family…", allFam:"All families", all:"All", orders:"orders", featured:"Featured",
          sortDefault:"Default", sortName:"By name", sortOrder:"By order", sortFamily:"By family", random:"Random fish",
          noresults:"No fish match your filters", reset:"Reset filters",
          lOrder:"Order", lFamily:"Family", lHabitat:"Habitat", lSize:"Max length", allOrd:"All orders",
@@ -62,7 +62,7 @@
   function loadCredits(){
     if(CREDITS) return Promise.resolve(CREDITS);
     if(!creditsPromise){
-      creditsPromise = fetch("credits.json?v=202607270044").then(r=>r.ok?r.json():{})
+      creditsPromise = fetch("credits.json?v=202607270050").then(r=>r.ok?r.json():{})
         .then(c=>{ CREDITS = c||{}; return CREDITS; })
         .catch(()=>{ CREDITS = {}; return CREDITS; });
     }
@@ -104,8 +104,12 @@
   // ---- category tabs ----
   function buildTabs(){
     const counts = {}; DATA.forEach(f=>counts[f.cat]=(counts[f.cat]||0)+1);
+    const featuredN = DATA.filter(f=>f.cat!=="more").length;
     let html = `<button class="cat-tab ${activeCat===""?"active":""}" data-cat="" style="--tabc:var(--accent)">`+
                `<span class="dot"></span>${I18N[lang].all} <span class="cnt">${DATA.length}</span></button>`;
+    // 精选：239 条手工策展的名鱼，散在 7 个小主题里没有统一入口
+    if(featuredN) html += `<button class="cat-tab ${activeCat==="__feat"?"active":""}" data-cat="__feat" style="--tabc:#fbbf24">`+
+               `<span class="dot"></span>★ ${I18N[lang].featured} <span class="cnt">${featuredN}</span></button>`;
     html += CAT_ORDER.filter(c=>counts[c]).map(c=>{
       const m=CATS[c];
       return `<button class="cat-tab ${activeCat===c?"active":""}" data-cat="${c}" style="--tabc:${m.color}">`+
@@ -186,7 +190,8 @@
   function apply(){
     const q = query.trim().toLowerCase();
     filtered = DATA.filter(f=>{
-      if(activeCat && f.cat!==activeCat) return false;
+      if(activeCat==="__feat"){ if(f.cat==="more") return false; }
+      else if(activeCat && f.cat!==activeCat) return false;
       if(famFilter && (lang==="zh"?f.family:f.family_en)!==famFilter) return false;
       if(ordFilter && f.order!==ordFilter) return false;
       if(q){
