@@ -47,7 +47,23 @@ else
   echo "== 4/5 无新图需上传 =="
 fi
 
-echo "== 5/5 提交并部署 =="
+echo "== 5/5 打缓存版本号 + 提交部署 =="
+# 静态资源加 ?v=时间戳，否则老访客会一直用缓存的旧 css/js 看不到更新
+V=$(date +%Y%m%d%H%M)
+python - "$V" <<'PY'
+import io, re, sys
+v = sys.argv[1]
+p = "index.html"; s = io.open(p, encoding="utf-8").read()
+for f in ("style.css", "fish.js", "app.js"):
+    s = re.sub(r'(href|src)="%s(\?v=\d+)?"' % re.escape(f),
+               lambda m: '%s="%s?v=%s"' % (m.group(1), f, v), s)
+io.open(p, "w", encoding="utf-8").write(s)
+p = "app.js"; a = io.open(p, encoding="utf-8").read()
+a = re.sub(r'fetch\("credits\.json(\?v=\d+)?"\)', 'fetch("credits.json?v=%s")' % v, a)
+io.open(p, "w", encoding="utf-8").write(a)
+print("  版本号 %s" % v)
+PY
+
 N=$(python -c "import json,re;t=open('fish.js',encoding='utf-8').read();print(len(json.loads(re.sub(r'/\*.*?\*/','',t[t.index('['):t.rindex(']')+1],flags=re.S))))")
 git add -A
 git -c user.name=cosmos1001 -c user.email=popstudy@gmail.com commit -q -m "Sync: $N species live" || echo "  (无变更)"
