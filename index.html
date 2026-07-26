@@ -56,6 +56,7 @@
     <button class="clear-btn" id="clear-search" title="清除">✕</button>
   </div>
   <div class="filter-row">
+    <select id="order-filter"><option value="">全部目</option></select>
     <select id="family-filter"><option value="">全部科</option></select>
     <select id="sort-filter" aria-label="排序">
       <option value="default">默认</option>
@@ -94,6 +95,7 @@
         <p class="modal-en" id="modal-en"></p>
         <p class="modal-sci" id="modal-sci"></p>
         <dl class="modal-meta">
+          <dt id="l-order">目</dt><dd id="modal-order"></dd>
           <dt id="l-family">科</dt><dd id="modal-family"></dd>
           <dt id="l-habitat">栖息水域</dt><dd id="modal-habitat"></dd>
           <dt id="l-size">最大体长</dt><dd id="modal-size"></dd>

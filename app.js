@@ -32,7 +32,7 @@
          search:"搜索名称、学名、科…", allFam:"全部科", all:"全部",
          sortDefault:"默认", sortName:"按名称", sortFamily:"按科", random:"随机一鱼",
          noresults:"未找到符合条件的鱼", reset:"重置筛选",
-         lFamily:"科", lHabitat:"栖息水域", lSize:"最大体长",
+         lOrder:"目", lFamily:"科", lHabitat:"栖息水域", lSize:"最大体长", allOrd:"全部目",
          prev:"← 上一条", next:"下一条 →",
          footer:"1001+ 种真实鱼类 · 从珊瑚礁的斑斓到深海的幽光", langbtn:"EN",
          share:"复制链接", copied:"已复制 ✓", photo:"图片：",
@@ -41,7 +41,7 @@
          search:"Search name, sci. name, family…", allFam:"All families", all:"All",
          sortDefault:"Default", sortName:"By name", sortFamily:"By family", random:"Random fish",
          noresults:"No fish match your filters", reset:"Reset filters",
-         lFamily:"Family", lHabitat:"Habitat", lSize:"Max length",
+         lOrder:"Order", lFamily:"Family", lHabitat:"Habitat", lSize:"Max length", allOrd:"All orders",
          prev:"← Prev", next:"Next →",
          footer:"1001+ real fish species · from reef brilliance to the deep-sea glow", langbtn:"中",
          share:"Copy link", copied:"Copied ✓", photo:"Photo: ",
@@ -52,6 +52,7 @@
   // ---- state ----
   let activeCat = "";     // "" = all
   let famFilter = "";
+  let ordFilter = "";
   let sort = "default";
   let query = "";
   let filtered = [];
@@ -72,6 +73,7 @@
   const $ = id => document.getElementById(id);
   const gallery = $("gallery"), catTabs = $("cat-tabs"), famSel = $("family-filter"),
         sortSel = $("sort-filter"), searchIn = $("search"), clearBtn = $("clear-search"),
+        ordSel = $("order-filter"),
         noResults = $("no-results");
 
   function nameOf(f){ return lang==="zh" ? f.name : f.name_en; }
@@ -84,6 +86,19 @@
     famSel.innerHTML = `<option value="">${I18N[lang].allFam}</option>` +
       fams.map(fm=>`<option value="${fm}">${fm}</option>`).join("");
     famSel.value = cur;
+  }
+
+  // ---- 目筛选（76 个目，比 442 个科更粗粒度、更好认）----
+  function buildOrders(){
+    // 只列真正的「目」（以「目」字结尾/Latin -iformes 结尾），过滤掉早期采集残留的纲/超纲标签
+    const isOrder = o => /目$/.test(o) || /iformes$/i.test(o);
+    const cnt = new Map();
+    DATA.forEach(f=>{ if(f.order && isOrder(f.order)) cnt.set(f.order,(cnt.get(f.order)||0)+1); });
+    const list=[...cnt.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],"zh"));
+    const cur=ordFilter;
+    ordSel.innerHTML=`<option value="">${I18N[lang].allOrd}</option>`+
+      list.map(([o,n])=>`<option value="${o}">${o} (${n})</option>`).join("");
+    ordSel.value=cur;
   }
 
   // ---- category tabs ----
@@ -173,8 +188,9 @@
     filtered = DATA.filter(f=>{
       if(activeCat && f.cat!==activeCat) return false;
       if(famFilter && (lang==="zh"?f.family:f.family_en)!==famFilter) return false;
+      if(ordFilter && f.order!==ordFilter) return false;
       if(q){
-        const hay = `${f.name} ${f.name_en} ${f.sci} ${f.family} ${f.family_en} ${f.habitat} ${f.habitat_en} ${f.py||""}`.toLowerCase();
+        const hay = `${f.name} ${f.name_en} ${f.sci} ${f.family} ${f.family_en} ${f.habitat} ${f.habitat_en} ${f.order||""} ${f.order_en||""} ${f.py||""}`.toLowerCase();
         if(!hay.includes(q)) return false;
       }
       return true;
@@ -254,6 +270,8 @@
     $("modal-name").textContent = nameOf(f);
     $("modal-en").textContent = subOf(f);
     $("modal-sci").textContent = f.sci;
+    const ov = (lang==="zh"?(f.order||f.order_en):(f.order_en||f.order)) || "";
+    $("modal-order").textContent = (/目$/.test(ov)||/iformes$/i.test(ov)) ? ov : "—";
     $("modal-family").textContent = (lang==="zh"?f.family:f.family_en) || "—";
     $("modal-habitat").textContent = (lang==="zh"?f.habitat:f.habitat_en) || "—";
     $("modal-size").textContent = f.size || "—";
@@ -311,14 +329,14 @@
     $("random-btn").textContent = t.random;
     document.getElementById("t-noresults").textContent = t.noresults;
     $("reset-btn").textContent = t.reset;
-    $("l-family").textContent=t.lFamily; $("l-habitat").textContent=t.lHabitat; $("l-size").textContent=t.lSize;
+    $("l-order").textContent=t.lOrder; $("l-family").textContent=t.lFamily; $("l-habitat").textContent=t.lHabitat; $("l-size").textContent=t.lSize;
     $("prev-fish").textContent=t.prev; $("next-fish").textContent=t.next;
     $("modal-share").textContent="⎘ "+t.share;
     $("family-view-btn").textContent=t.byFamily;
     if(famView) renderFamilyIndex();
     document.getElementById("t-footer").textContent=t.footer;
     $("lang-toggle").textContent=t.langbtn;
-    buildFamilies(); buildTabs(); apply();
+    buildOrders(); buildFamilies(); buildTabs(); apply();
   }
 
   // ---- events ----
@@ -331,6 +349,7 @@
     if(famView && query){ hideFamilyIndex(); $("family-header").style.display="none"; famFilter=""; famSel.value=""; }
     apply(); });
   clearBtn.onclick=()=>{ searchIn.value=""; query=""; clearBtn.style.display="none"; apply(); };
+  ordSel.onchange=()=>{ ordFilter=ordSel.value; if(famView) hideFamilyIndex(); $("family-header").style.display="none"; apply(); };
   famSel.onchange=()=>{ famFilter=famSel.value; if(famView) hideFamilyIndex(); $("family-header").style.display="none"; apply(); };
   $("family-view-btn").onclick=()=>{ famView ? (hideFamilyIndex(), $("family-header").style.display="none", apply()) : showFamilyIndex(); };
   $("family-index").addEventListener("click", e=>{
@@ -351,7 +370,7 @@
     else{ const t=document.createElement("textarea"); t.value=link; document.body.appendChild(t); t.select();
       try{document.execCommand("copy");}catch(e){} t.remove(); done(); }
   };
-  $("reset-btn").onclick=()=>{ activeCat="";famFilter="";query="";searchIn.value="";clearBtn.style.display="none";
+  $("reset-btn").onclick=()=>{ activeCat="";famFilter="";ordFilter="";ordSel.value="";query="";searchIn.value="";clearBtn.style.display="none";
     if(famView) hideFamilyIndex(); $("family-header").style.display="none";
     buildTabs();buildFamilies();apply(); };
   $("lang-toggle").onclick=()=>{ lang=lang==="zh"?"en":"zh"; localStorage.setItem("fish-lang",lang); applyLang(); };

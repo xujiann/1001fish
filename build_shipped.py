@@ -35,11 +35,38 @@ def commons_name(v):
     t = v.get("title") or ""
     return t[5:] if t.startswith("File:") else ""
 
+def load_orders():
+    """学名 -> (目中文名, 目拉丁名)。目信息来自采集原料的 cls 字段。"""
+    conv = {}
+    p = os.path.join(ROOT, "_harvest_raw.json")
+    zp = os.path.join(ROOT, "_orders_zh.json")
+    if not os.path.exists(p): return {}
+    zh = json.load(open(zp, encoding="utf-8")) if os.path.exists(zp) else {}
+    for r in json.load(open(p, encoding="utf-8")):
+        la = r.get("cls") or ""
+        if not la or not la[0].isupper(): continue
+        conv[r["sci"].lower()] = (zh.get(la, ""), la)
+    return conv
+
 def main():
     full = load("fish.full.js")
     have = have_images()
     ship = [f for f in full if f["id"] in have]
     print("母版 %d 条 | 本地图 %d 张 | 上线 %d 条" % (len(full), len(have), len(ship)))
+
+    # 补「目」——比科更高一层，让 94% 挤在 more 的长尾有真正的分类维度
+    omap = load_orders()
+    got = 0
+    for f in ship:
+        o = omap.get(f["sci"].lower())
+        if o and (o[0] or o[1]):
+            f["order"] = o[0] or o[1]        # 中文名优先
+            f["order_en"] = o[1]
+            got += 1
+    print("补到「目」的物种: %d / %d" % (got, len(ship)))
+
+    # 瘦身：空字段不写进 JSON（前端已用 || "—" 兜底），3456 条的空 habitat/size 白占 ~150KB
+    ship = [{k: v for k, v in f.items() if v not in ("", None)} for f in ship]
 
     header = ("/* 1001+ 种鱼 — 上线数据集（%d 条，均有真实照片）\n"
               "   由 build_shipped.py 从母版 fish.full.js 生成：只含本地已下载图片的物种。\n"
