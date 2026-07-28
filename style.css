@@ -134,6 +134,19 @@ select:hover{border-color:var(--accent2)}
 .card-sci{font-size:11.5px;color:var(--ink-dim);font-style:italic;margin-top:5px}
 .card-meta{font-size:11px;color:var(--ink-faint);margin-top:6px;display:flex;justify-content:space-between;gap:6px}
 
+/* GBIF 分布图：底图 + 观测点两层瓦片叠加（EPSG:4326，各 512×512，拼成 2:1 世界图）
+   底图全站共用 → 浏览器缓存后每条鱼只多取 2 张 ~3KB 的点图 */
+.dist-wrap{margin-top:14px}
+.dist-title{font-size:11.5px;color:var(--ink-faint);margin-bottom:5px;display:flex;
+  align-items:center;justify-content:space-between;gap:8px}
+.dist-map{position:relative;width:100%;aspect-ratio:2/1;border-radius:8px;overflow:hidden;
+  background:var(--panel2);border:1px solid var(--line)}
+.dist-map img{position:absolute;top:0;width:50%;height:100%;object-fit:fill}
+.dist-map .dm-base{filter:invert(1) hue-rotate(180deg) brightness(.55) saturate(.5)}
+.dist-map .dm-pts{mix-blend-mode:screen}
+.dist-map .l{left:0}.dist-map .r{left:50%}
+.dist-n{color:var(--accent);font-weight:600}
+
 /* IUCN 濒危等级徽章：沿用 IUCN 官方色阶（绿=无危 → 红=极危 → 黑=灭绝）*/
 .iucn{position:absolute;top:9px;right:9px;z-index:2;font-size:10px;font-weight:800;
   letter-spacing:.4px;padding:3px 7px;border-radius:10px;color:#fff;

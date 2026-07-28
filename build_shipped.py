@@ -113,6 +113,16 @@ def main():
               ensure_ascii=False, separators=(",", ":"))
     print("credits.json: %d 条（覆盖 %.0f%%）" % (len(credits), 100*len(credits)/max(len(ship),1)))
 
+    # gbif.json：只含上线物种的 taxonKey + 观测数，供弹窗分布图按需加载
+    gp = os.path.join(ROOT, "_gbif.json")
+    if os.path.exists(gp):
+        gall = json.load(open(gp, encoding="utf-8"))
+        gout = {f["sci"]: gall[f["sci"]] for f in ship
+                if gall.get(f["sci"]) and gall[f["sci"]].get("k")}
+        json.dump(gout, open(os.path.join(ROOT, "gbif.json"), "w", encoding="utf-8"),
+                  ensure_ascii=False, separators=(",", ":"))
+        print("gbif.json: %d 条有分布数据 (%.0f%%)" % (len(gout), 100*len(gout)/max(len(ship),1)))
+
     fams = len({f["family"] for f in ship if f.get("family")})
     print("上线科数: %d | 有科条目: %d" % (fams, sum(1 for f in ship if f.get("family"))))
 

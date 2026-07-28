@@ -44,7 +44,7 @@
          lOrder:"目", lFamily:"科", lHabitat:"栖息水域", lSize:"最大体长", allOrd:"全部目",
          prev:"← 上一条", next:"下一条 →",
          footer:"1001+ 种真实鱼类 · 从珊瑚礁的斑斓到深海的幽光", langbtn:"EN",
-         share:"复制链接", copied:"已复制 ✓", photo:"图片：",
+         share:"复制链接", copied:"已复制 ✓", photo:"图片：", dist:"全球分布", records:"条观测记录", distSrc:"数据 GBIF",
          byFamily:"按科浏览", allFamiliesTitle:"按科浏览", famCount:"种", backToFamilies:"← 所有科" },
     en:{ sub:" Fishes", subtitle:"From reef brilliance to the glow of the deep", species:"species", families:"families",
          search:"Search name, sci. name, order, family…", allFam:"All families", all:"All", orders:"orders", featured:"Featured", lIucn:"IUCN status", threatened:"Threatened", allIucn:"All IUCN status",
@@ -53,7 +53,7 @@
          lOrder:"Order", lFamily:"Family", lHabitat:"Habitat", lSize:"Max length", allOrd:"All orders",
          prev:"← Prev", next:"Next →",
          footer:"1001+ real fish species · from reef brilliance to the deep-sea glow", langbtn:"中",
-         share:"Copy link", copied:"Copied ✓", photo:"Photo: ",
+         share:"Copy link", copied:"Copied ✓", photo:"Photo: ", dist:"Global distribution", records:"records", distSrc:"via GBIF",
          byFamily:"By family", allFamiliesTitle:"Browse by family", famCount:"species", backToFamilies:"← All families" },
   };
   let lang = localStorage.getItem("fish-lang") || "zh";
@@ -72,7 +72,7 @@
   function loadCredits(){
     if(CREDITS) return Promise.resolve(CREDITS);
     if(!creditsPromise){
-      creditsPromise = fetch("credits.json?v=202607290108").then(r=>r.ok?r.json():{})
+      creditsPromise = fetch("credits.json?v=202607290145").then(r=>r.ok?r.json():{})
         .then(c=>{ CREDITS = c||{}; return CREDITS; })
         .catch(()=>{ CREDITS = {}; return CREDITS; });
     }
@@ -288,6 +288,30 @@
       " · Wikimedia Commons";
   }
 
+  // ---- GBIF 全球分布图 ----
+  const GBIF_BASE = "https://tile.gbif.org/4326/omt/0/{x}/0@1x.png?style=gbif-light";
+  const GBIF_PTS  = "https://api.gbif.org/v2/map/occurrence/density/0/{x}/0@1x.png" +
+                    "?srs=EPSG%3A4326&style=classic.point&taxonKey=";
+  let GBIF = null, gbifPromise = null;
+  function loadGbif(){
+    if(GBIF) return Promise.resolve(GBIF);
+    if(!gbifPromise) gbifPromise = fetch("gbif.json").then(r=>r.ok?r.json():{})
+      .then(g=>{ GBIF = g||{}; return GBIF; }).catch(()=>{ GBIF={}; return GBIF; });
+    return gbifPromise;
+  }
+  function renderDist(f){
+    const wrap = $("dist-wrap"); if(!wrap) return;
+    const g = GBIF && GBIF[f.sci];
+    if(!g || !g.k){ wrap.style.display="none"; return; }
+    wrap.style.display="";
+    $("t-dist").textContent = I18N[lang].dist;
+    $("dist-n").innerHTML = g.n ? `<span class="dist-n">${g.n.toLocaleString()}</span> ${I18N[lang].records} · ${I18N[lang].distSrc}` : I18N[lang].distSrc;
+    $("dist-map").innerHTML = [0,1].map(x=>
+      `<img class="dm-base ${x?"r":"l"}" src="${GBIF_BASE.replace("{x}",x)}" alt="" loading="lazy">`).join("")+
+      [0,1].map(x=>
+      `<img class="dm-pts ${x?"r":"l"}" src="${GBIF_PTS.replace("{x}",x)+g.k}" alt="" loading="lazy">`).join("");
+  }
+
   // ---- modal ----
   let modalId = null, modalOpener = null;
   function openModal(id){
@@ -302,6 +326,8 @@
     };
     $("modal-credit").innerHTML = "";
     loadCredits().then(()=>{ if(modalId===id) renderCredit(id); });
+    $("dist-wrap").style.display="none";
+    loadGbif().then(()=>{ if(modalId===id) renderDist(f); });
     $("modal-cat").textContent = lang==="zh"?m.zh:m.en;
     $("modal-name").textContent = nameOf(f);
     $("modal-en").textContent = subOf(f);
