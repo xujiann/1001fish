@@ -66,6 +66,17 @@ def main():
             got += 1
     print("补到「目」的物种: %d / %d" % (got, len(ship)))
 
+    # IUCN 濒危等级（Wikidata P141，标准代码 LC/NT/VU/EN/CR/EW/EX/DD）
+    ip = os.path.join(ROOT, "_iucn.json")
+    if os.path.exists(ip):
+        iucn = json.load(open(ip, encoding="utf-8"))
+        n = 0
+        for f in ship:
+            c = iucn.get(f["sci"])
+            if c:
+                f["iucn"] = c; n += 1
+        print("有濒危等级的物种: %d / %d" % (n, len(ship)))
+
     # 瘦身：空字段不写进 JSON（前端已用 || "—" 兜底），3456 条的空 habitat/size 白占 ~150KB
     ship = [{k: v for k, v in f.items() if v not in ("", None)} for f in ship]
 

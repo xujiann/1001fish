@@ -134,6 +134,17 @@ select:hover{border-color:var(--accent2)}
 .card-sci{font-size:11.5px;color:var(--ink-dim);font-style:italic;margin-top:5px}
 .card-meta{font-size:11px;color:var(--ink-faint);margin-top:6px;display:flex;justify-content:space-between;gap:6px}
 
+/* IUCN 濒危等级徽章：沿用 IUCN 官方色阶（绿=无危 → 红=极危 → 黑=灭绝）*/
+.iucn{position:absolute;top:9px;right:9px;z-index:2;font-size:10px;font-weight:800;
+  letter-spacing:.4px;padding:3px 7px;border-radius:10px;color:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.iucn-LC{background:#1e7a3c}.iucn-NT{background:#8a9a2b}.iucn-VU{background:#c9a227}
+.iucn-EN{background:#d97706}.iucn-CR{background:#c1272d}
+.iucn-EW{background:#5b2a86}.iucn-EX{background:#111;border:1px solid #555}
+.iucn-DD{background:#4b5563}
+.modal-iucn{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.4px;
+  padding:3px 9px;border-radius:11px;color:#fff;margin-left:6px;vertical-align:1px}
+
 /* no results */
 .no-results{max-width:600px;margin:60px auto;text-align:center;color:var(--ink-dim)}
 .no-results button,#reset-btn{margin-top:14px;background:var(--panel2);border:1px solid var(--line);

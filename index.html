@@ -30,7 +30,7 @@
   "inLanguage": ["zh-CN", "en"]
 }
 </script>
-<link rel="stylesheet" href="style.css?v=202607270050">
+<link rel="stylesheet" href="style.css?v=202607290108">
 </head>
 <body>
 <header class="site-header">
@@ -57,6 +57,7 @@
     <button class="clear-btn" id="clear-search" title="清除">✕</button>
   </div>
   <div class="filter-row">
+    <select id="iucn-filter"><option value="">全部保护级别</option></select>
     <select id="order-filter"><option value="">全部目</option></select>
     <select id="family-filter"><option value="">全部科</option></select>
     <select id="sort-filter" aria-label="排序">
@@ -97,6 +98,7 @@
         <p class="modal-en" id="modal-en"></p>
         <p class="modal-sci" id="modal-sci"></p>
         <dl class="modal-meta">
+          <dt id="l-iucn">保护级别</dt><dd><span id="modal-iucn" class="modal-iucn"></span></dd>
           <dt id="l-order">目</dt><dd id="modal-order"></dd>
           <dt id="l-family">科</dt><dd id="modal-family"></dd>
           <dt id="l-habitat">栖息水域</dt><dd id="modal-habitat"></dd>
@@ -120,8 +122,8 @@
   <p class="footer-credit">图片 Wikimedia Commons · 数据 Wikidata / FishBase · 仅作教育科普展示</p>
 </footer>
 
-<script defer src="fish.js?v=202607270050"></script>
-<script defer src="app.js?v=202607270050"></script>
+<script defer src="fish.js?v=202607290108"></script>
+<script defer src="app.js?v=202607290108"></script>
 <!-- hub-nav: back to 1001×1001 -->
 <a id="hub-link" href="https://xujiann.github.io/" title="返回 1001 × 1001 · 万物收藏" aria-label="返回 1001×1001 万物收藏">1001 × 1001</a>
 <style>#hub-link{position:fixed;left:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:120;display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:100px;background:rgba(18,15,28,.85);border:1px solid rgba(255,255,255,.14);color:#e8e8f0;font:600 12.5px/1 system-ui,-apple-system,"Segoe UI","Noto Sans SC",sans-serif;text-decoration:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 4px 16px rgba(0,0,0,.35);transition:transform .2s,border-color .2s,background .2s}#hub-link::before{content:"\2756";color:#d9b26a;font-size:13px}#hub-link:hover{transform:translateY(-2px);border-color:rgba(217,178,106,.6);background:rgba(28,22,42,.95)}@media(max-width:640px){#hub-link{font-size:11.5px;padding:6px 11px;left:10px}}</style>

@@ -24,12 +24,21 @@
     deep:["🎣","🐙","🦑"], temperate:["🐟","🎏"], special:["🐙","🦑","🐡","🐴"],
     rare:["🦴","🐊","🐉"], more:["🐟","🐠","🐡","🎣"],
   };
+  // IUCN 濒危等级（世界自然保护联盟标准代码）
+  const IUCN = {
+    EX:{zh:"灭绝",en:"Extinct"},          EW:{zh:"野外灭绝",en:"Extinct in the Wild"},
+    CR:{zh:"极危",en:"Critically Endangered"}, EN:{zh:"濒危",en:"Endangered"},
+    VU:{zh:"易危",en:"Vulnerable"},        NT:{zh:"近危",en:"Near Threatened"},
+    LC:{zh:"无危",en:"Least Concern"},     DD:{zh:"数据缺乏",en:"Data Deficient"},
+  };
+  const THREATENED = ["NT","VU","EN","CR","EW","EX"];   // 受威胁及以上
+
   function emojiFor(f){ const p = EMOJI[f.cat]||["🐟"]; return p[f.id % p.length]; }
 
   // ---- i18n ----
   const I18N = {
     zh:{ sub:"种鱼", subtitle:"从珊瑚礁的斑斓到深海的幽光", species:"种", families:"科",
-         search:"搜索名称、拼音、学名、目、科…", allFam:"全部科", all:"全部", orders:"目", featured:"精选",
+         search:"搜索名称、拼音、学名、目、科…", allFam:"全部科", all:"全部", orders:"目", featured:"精选", lIucn:"保护级别", threatened:"受威胁", allIucn:"全部保护级别",
          sortDefault:"默认", sortName:"按名称", sortOrder:"按目", sortFamily:"按科", random:"随机一鱼",
          noresults:"未找到符合条件的鱼", reset:"重置筛选",
          lOrder:"目", lFamily:"科", lHabitat:"栖息水域", lSize:"最大体长", allOrd:"全部目",
@@ -38,7 +47,7 @@
          share:"复制链接", copied:"已复制 ✓", photo:"图片：",
          byFamily:"按科浏览", allFamiliesTitle:"按科浏览", famCount:"种", backToFamilies:"← 所有科" },
     en:{ sub:" Fishes", subtitle:"From reef brilliance to the glow of the deep", species:"species", families:"families",
-         search:"Search name, sci. name, order, family…", allFam:"All families", all:"All", orders:"orders", featured:"Featured",
+         search:"Search name, sci. name, order, family…", allFam:"All families", all:"All", orders:"orders", featured:"Featured", lIucn:"IUCN status", threatened:"Threatened", allIucn:"All IUCN status",
          sortDefault:"Default", sortName:"By name", sortOrder:"By order", sortFamily:"By family", random:"Random fish",
          noresults:"No fish match your filters", reset:"Reset filters",
          lOrder:"Order", lFamily:"Family", lHabitat:"Habitat", lSize:"Max length", allOrd:"All orders",
@@ -53,6 +62,7 @@
   let activeCat = "";     // "" = all
   let famFilter = "";
   let ordFilter = "";
+  let iucnFilter = "";
   let sort = "default";
   let query = "";
   let filtered = [];
@@ -62,7 +72,7 @@
   function loadCredits(){
     if(CREDITS) return Promise.resolve(CREDITS);
     if(!creditsPromise){
-      creditsPromise = fetch("credits.json?v=202607270050").then(r=>r.ok?r.json():{})
+      creditsPromise = fetch("credits.json?v=202607290108").then(r=>r.ok?r.json():{})
         .then(c=>{ CREDITS = c||{}; return CREDITS; })
         .catch(()=>{ CREDITS = {}; return CREDITS; });
     }
@@ -73,7 +83,7 @@
   const $ = id => document.getElementById(id);
   const gallery = $("gallery"), catTabs = $("cat-tabs"), famSel = $("family-filter"),
         sortSel = $("sort-filter"), searchIn = $("search"), clearBtn = $("clear-search"),
-        ordSel = $("order-filter"),
+        ordSel = $("order-filter"), iucnSel = $("iucn-filter"),
         noResults = $("no-results");
 
   // 73% 的物种没有英文俗名（很多冷门鱼学界就没起），英文模式退回学名；
@@ -99,6 +109,22 @@
     ordSel.innerHTML=`<option value="">${I18N[lang].allOrd}</option>`+
       list.map(([o,n])=>`<option value="${o}">${o} (${n})</option>`).join("");
     ordSel.value=cur;
+  }
+
+  // ---- 保护级别筛选 ----
+  function buildIucn(){
+    const cnt=new Map();
+    DATA.forEach(f=>{ if(f.iucn) cnt.set(f.iucn,(cnt.get(f.iucn)||0)+1); });
+    if(!cnt.size){ iucnSel.style.display="none"; return; }
+    iucnSel.style.display="";
+    const order=["EX","EW","CR","EN","VU","NT","LC","DD"];
+    const th=DATA.filter(f=>THREATENED.includes(f.iucn)).length;
+    const cur=iucnFilter;
+    iucnSel.innerHTML=`<option value="">${I18N[lang].allIucn}</option>`+
+      (th?`<option value="__threat">⚠ ${I18N[lang].threatened} (${th})</option>`:"")+
+      order.filter(k=>cnt.get(k)).map(k=>
+        `<option value="${k}">${lang==="zh"?IUCN[k].zh:IUCN[k].en} (${cnt.get(k)})</option>`).join("");
+    iucnSel.value=cur;
   }
 
   // ---- category tabs ----
@@ -194,6 +220,8 @@
       else if(activeCat && f.cat!==activeCat) return false;
       if(famFilter && (lang==="zh"?f.family:f.family_en)!==famFilter) return false;
       if(ordFilter && f.order!==ordFilter) return false;
+      if(iucnFilter==="__threat"){ if(!THREATENED.includes(f.iucn)) return false; }
+      else if(iucnFilter && f.iucn!==iucnFilter) return false;
       if(q){
         const hay = [f.name,f.name_en,f.sci,f.family,f.family_en,f.habitat,f.habitat_en,f.order,f.order_en,f.py]
           .filter(Boolean).join(" ").toLowerCase();
@@ -217,7 +245,8 @@
     const photo = `<img class="card-photo" src="${IMG_BASE}/${f.id}.jpg" alt="" loading="lazy">`;
     return `<article class="card" data-id="${f.id}" style="--cardc:${m.color}" tabindex="0" role="button" aria-label="${nameOf(f)}">`+
       `<div class="card-img"><span class="card-cat">${lang==="zh"?m.zh:m.en}</span>`+
-      `<span class="card-emoji">${emojiFor(f)}</span>${photo}</div>`+
+      `<span class="card-emoji">${emojiFor(f)}</span>${photo}`+
+      (f.iucn?`<span class="iucn iucn-${f.iucn}" title="${IUCN[f.iucn]?(lang==="zh"?IUCN[f.iucn].zh:IUCN[f.iucn].en):f.iucn}">${f.iucn}</span>`:"")+`</div>`+
       `<div class="card-body">`+
         `<div class="card-name">${nameOf(f)}</div>`+
         `<div class="card-en">${subOf(f)}</div>`+
@@ -277,6 +306,11 @@
     $("modal-name").textContent = nameOf(f);
     $("modal-en").textContent = subOf(f);
     $("modal-sci").textContent = f.sci;
+    const iu=$("modal-iucn");
+    if(f.iucn && IUCN[f.iucn]){
+      iu.textContent=(lang==="zh"?IUCN[f.iucn].zh:IUCN[f.iucn].en)+" ("+f.iucn+")";
+      iu.className="modal-iucn iucn-"+f.iucn; iu.style.display="";
+    } else { iu.style.display="none"; }
     $("modal-order").textContent = (lang==="zh"?(f.order||f.order_en):(f.order_en||f.order)) || "—";
     $("modal-family").textContent = (lang==="zh"?f.family:f.family_en) || "—";
     $("modal-habitat").textContent = (lang==="zh"?f.habitat:f.habitat_en) || "—";
@@ -336,14 +370,14 @@
     $("random-btn").textContent = t.random;
     document.getElementById("t-noresults").textContent = t.noresults;
     $("reset-btn").textContent = t.reset;
-    $("l-order").textContent=t.lOrder; $("l-family").textContent=t.lFamily; $("l-habitat").textContent=t.lHabitat; $("l-size").textContent=t.lSize;
+    $("l-iucn").textContent=t.lIucn; $("l-order").textContent=t.lOrder; $("l-family").textContent=t.lFamily; $("l-habitat").textContent=t.lHabitat; $("l-size").textContent=t.lSize;
     $("prev-fish").textContent=t.prev; $("next-fish").textContent=t.next;
     $("modal-share").textContent="⎘ "+t.share;
     $("family-view-btn").textContent=t.byFamily;
     if(famView) renderFamilyIndex();
     document.getElementById("t-footer").textContent=t.footer;
     $("lang-toggle").textContent=t.langbtn;
-    buildOrders(); buildFamilies(); buildTabs(); apply();
+    buildOrders(); buildIucn(); buildFamilies(); buildTabs(); apply();
   }
 
   // ---- events ----
@@ -356,6 +390,7 @@
     if(famView && query){ hideFamilyIndex(); $("family-header").style.display="none"; famFilter=""; famSel.value=""; }
     apply(); });
   clearBtn.onclick=()=>{ searchIn.value=""; query=""; clearBtn.style.display="none"; apply(); };
+  iucnSel.onchange=()=>{ iucnFilter=iucnSel.value; if(famView) hideFamilyIndex(); $("family-header").style.display="none"; apply(); };
   ordSel.onchange=()=>{ ordFilter=ordSel.value; if(famView) hideFamilyIndex(); $("family-header").style.display="none"; apply(); };
   famSel.onchange=()=>{ famFilter=famSel.value; if(famView) hideFamilyIndex(); $("family-header").style.display="none"; apply(); };
   $("family-view-btn").onclick=()=>{ famView ? (hideFamilyIndex(), $("family-header").style.display="none", apply()) : showFamilyIndex(); };
@@ -377,7 +412,7 @@
     else{ const t=document.createElement("textarea"); t.value=link; document.body.appendChild(t); t.select();
       try{document.execCommand("copy");}catch(e){} t.remove(); done(); }
   };
-  $("reset-btn").onclick=()=>{ activeCat="";famFilter="";ordFilter="";ordSel.value="";query="";searchIn.value="";clearBtn.style.display="none";
+  $("reset-btn").onclick=()=>{ activeCat="";famFilter="";ordFilter="";ordSel.value="";iucnFilter="";iucnSel.value="";query="";searchIn.value="";clearBtn.style.display="none";
     if(famView) hideFamilyIndex(); $("family-header").style.display="none";
     buildTabs();buildFamilies();apply(); };
   $("lang-toggle").onclick=()=>{ lang=lang==="zh"?"en":"zh"; localStorage.setItem("fish-lang",lang); applyLang(); };
