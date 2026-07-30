@@ -7,18 +7,8 @@ cd "C:/Users/drxuj/OneDrive/claude/1001fish"
 echo "== 1/5 从母版重建上线数据（只含已有图的物种）=="
 python build_shipped.py
 
-echo "== 2/5 目名繁转简 =="
-node -e "
-const fs=require('fs');
-const OpenCC=require('C:/Users/drxuj/OneDrive/claude/1001art/node_modules/opencc-js');
-const conv=OpenCC.Converter({from:'t',to:'cn'});
-const p='fish.js'; const lines=fs.readFileSync(p,'utf8').split('\n'); let n=0;
-const out=lines.map(l=>{const t=l.trim(); if(!t.startsWith('{\"id\"'))return l;
-  const c=t.endsWith(','); const o=JSON.parse(c?t.slice(0,-1):t);
-  if(o.order){const v=conv(o.order); if(v!==o.order){o.order=v;n++;}}
-  return JSON.stringify(o)+(c?',':'');});
-fs.writeFileSync(p,out.join('\n'),'utf8'); console.log('  转换',n,'条');
-"
+echo "== 2/5 目名繁转简（可选，缺 opencc 只警告不中断）=="
+node convert_orders.js || echo "  ⚠ 繁转简失败，继续部署"
 
 echo "== 3/5 挑出尚未上传 COS 的图 =="
 rm -rf _upnew && mkdir -p _upnew

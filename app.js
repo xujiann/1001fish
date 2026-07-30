@@ -72,7 +72,7 @@
   function loadCredits(){
     if(CREDITS) return Promise.resolve(CREDITS);
     if(!creditsPromise){
-      creditsPromise = fetch("credits.json?v=202607290241").then(r=>r.ok?r.json():{})
+      creditsPromise = fetch("credits.json?v=202607301145").then(r=>r.ok?r.json():{})
         .then(c=>{ CREDITS = c||{}; return CREDITS; })
         .catch(()=>{ CREDITS = {}; return CREDITS; });
     }

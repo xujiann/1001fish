@@ -66,6 +66,23 @@ def main():
             got += 1
     print("补到「目」的物种: %d / %d" % (got, len(ship)))
 
+    # 少数物种 Wikidata 的分类链缺「目」这一级（只到科），用「同科其他物种的目」补齐。
+    # 科→目是稳定的一对一关系，且这里每次都有该科内数十至数百条物种佐证，属数据推导而非猜测。
+    fam2ord = {}
+    for f in ship:
+        if f.get("family") and f.get("order"):
+            fam2ord.setdefault(f["family"], {}).setdefault((f["order"], f.get("order_en", "")), 0)
+            fam2ord[f["family"]][(f["order"], f.get("order_en", ""))] += 1
+    filled = 0
+    for f in ship:
+        if f.get("order") or not f.get("family"): continue
+        cand = fam2ord.get(f["family"])
+        if cand:
+            (zh, la), _ = max(cand.items(), key=lambda kv: kv[1])
+            f["order"], f["order_en"] = zh, la
+            filled += 1
+    if filled: print("由同科物种补齐「目」: %d 条" % filled)
+
     # IUCN 濒危等级（Wikidata P141，标准代码 LC/NT/VU/EN/CR/EW/EX/DD）
     ip = os.path.join(ROOT, "_iucn.json")
     if os.path.exists(ip):
