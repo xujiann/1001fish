@@ -1,9 +1,9 @@
 // 对 fish.js 里 cat=more 的条目：繁体名转简体 + 冗余 name_en(==sci) 置空。逐行保结构，幂等。
 const fs = require('fs');
-const OpenCC = require('C:/Users/drxuj/OneDrive/claude/1001art/node_modules/opencc-js');
+const OpenCC = require('C:/Users/drxuj/Claude/Projects/1001art/node_modules/opencc-js');
 const conv = OpenCC.Converter({ from: 't', to: 'cn' });
 const hasCJK = s => /[一-鿿]/.test(s);
-const path = 'C:/Users/drxuj/OneDrive/claude/1001fish/fish.js';
+const path = 'C:/Users/drxuj/Claude/Projects/1001fish/fish.js';
 
 const lines = fs.readFileSync(path, 'utf8').split('\n');
 let nConv = 0, nBlank = 0;

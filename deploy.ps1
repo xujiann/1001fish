@@ -1,8 +1,8 @@
 # 1001fish one-click deploy. Run in your own terminal:
-#   powershell -File C:\Users\drxuj\OneDrive\claude\1001fish\deploy.ps1
+#   powershell -File C:\Users\drxuj\Claude\Projects\1001fish\deploy.ps1
 # Requires: gh auth login (currently xujiann). Creates two PUBLIC repos + enables Pages.
 $ErrorActionPreference = 'Stop'
-$root = 'C:/Users/drxuj/OneDrive/claude/1001fish'
+$root = 'C:/Users/drxuj/Claude/Projects/1001fish'
 $cdn  = 'https://cdn.jsdelivr.net/gh/xujiann/1001fish-img@v1/images'
 
 Write-Host '== 1/5 stage image repo =='

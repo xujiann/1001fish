@@ -1,10 +1,10 @@
 // 把 _families.json 的科名写进 fish.js 里 cat=more 的空 family 条目。繁体转简体。逐行保结构。
 const fs = require('fs');
-const OpenCC = require('C:/Users/drxuj/OneDrive/claude/1001art/node_modules/opencc-js');
+const OpenCC = require('C:/Users/drxuj/Claude/Projects/1001art/node_modules/opencc-js');
 const conv = OpenCC.Converter({ from: 't', to: 'cn' });
-const path = 'C:/Users/drxuj/OneDrive/claude/1001fish/fish.js';
+const path = 'C:/Users/drxuj/Claude/Projects/1001fish/fish.js';
 
-const fam = JSON.parse(fs.readFileSync('C:/Users/drxuj/OneDrive/claude/1001fish/_families.json', 'utf8'));
+const fam = JSON.parse(fs.readFileSync('C:/Users/drxuj/Claude/Projects/1001fish/_families.json', 'utf8'));
 const lines = fs.readFileSync(path, 'utf8').split('\n');
 let n = 0;
 const out = lines.map(line => {
