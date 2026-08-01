@@ -1,6 +1,6 @@
-/* 1001+ 种鱼 — 上线数据集（4989 条，均有真实照片）
+/* 1001+ 种鱼 — 上线数据集（4980 条，均有真实照片）
    由 build_shipped.py 从母版 fish.full.js 生成：只含本地已下载图片的物种。
-   母版共 4989 条，其余待图片下载完成后增量上线。 */
+   母版共 4980 条，其余待图片下载完成后增量上线。 */
 window.FISH_DATA = [
 {"id":1,"name":"公子小丑鱼","name_en":"Ocellaris Clownfish","sci":"Amphiprion ocellaris","family":"雀鲷科","family_en":"Pomacentridae","cat":"reef","habitat":"印太珊瑚礁","habitat_en":"Indo-Pacific reefs","size":"11 cm","py":"gongzixiaochouyu gzxcy","order":"鳚形目","order_en":"Blenniiformes","iucn":"LC"},
 {"id":2,"name":"番茄小丑鱼","name_en":"Tomato Clownfish","sci":"Amphiprion frenatus","family":"雀鲷科","family_en":"Pomacentridae","cat":"reef","habitat":"西太平洋珊瑚礁","habitat_en":"Western Pacific reefs","size":"14 cm","py":"fanqiexiaochouyu fqxcy","order":"鳚形目","order_en":"Blenniiformes","iucn":"LC"},
@@ -376,7 +376,6 @@ window.FISH_DATA = [
 {"id":372,"name":"凡尼红娘鱼","sci":"Lepidotrigla vanessa","family":"角鱼科","family_en":"Triglidae","cat":"more","py":"fannihongniangyu fnhny","order":"鲉形目","order_en":"Scorpaeniformes"},
 {"id":373,"name":"凯氏棘花鮨","sci":"Plectranthias kelloggi","family":"鮨科","family_en":"Serranidae","cat":"more","py":"kaishijihuayi ksjhy","order":"鲈形目","order_en":"Perciformes","iucn":"LC"},
 {"id":374,"name":"凯氏小鲈","sci":"Percina kathae","family":"鲈科","family_en":"Percidae","cat":"more","py":"kaishixiaolu ksxl","order":"鲈形目","order_en":"Perciformes","iucn":"LC"},
-{"id":375,"name":"凯氏浪花鮨","sci":"Zalanthias kelloggi","family":"鮨科","family_en":"Serranidae","cat":"more","py":"kaishilanghuayi kslhy","order":"鲈形目","order_en":"Perciformes"},
 {"id":376,"name":"凯氏鲻","sci":"Mugil capurrii","family":"鲻科","family_en":"Mugilidae","cat":"more","py":"kaishizi ksz","order":"鲻形目","order_en":"Mugiliformes","iucn":"LC"},
 {"id":377,"name":"凹吻蓝子鱼","sci":"Siganus corallinus","family":"蓝子鱼科","family_en":"Siganidae","cat":"more","py":"aowenlanziyu awlzy","order":"刺尾鲷目","order_en":"Acanthuriformes","iucn":"LC"},
 {"id":378,"name":"凹尾裸棘杜父鱼","sci":"Gymnocanthus herzensteini","family":"杜父鱼科","family_en":"Cottidae","cat":"more","py":"aoweiluojidufuyu awljdfy","order":"鲈形目","order_en":"Perciformes"},
@@ -1211,7 +1210,6 @@ window.FISH_DATA = [
 {"id":1208,"name":"浅海小鲉","sci":"Scorpaenodes littoralis","family":"鲉科","family_en":"Scorpaenidae","cat":"more","py":"qianhaixiaoyou qhxy","order":"鲉形目","order_en":"Scorpaeniformes"},
 {"id":1209,"name":"浅色床杜父鱼","sci":"Myoxocephalus jaok","family":"杜父鱼科","family_en":"Cottidae","cat":"more","py":"qiansechuangdufuyu qscdfy","order":"鲈形目","order_en":"Perciformes"},
 {"id":1210,"name":"浅黑下美鮨","sci":"Hyporthodus nigritus","family":"鮨科","family_en":"Serranidae","cat":"more","py":"qianheixiameiyi qhxmy","order":"鲈形目","order_en":"Perciformes","iucn":"NT"},
-{"id":1211,"name":"浅黑石斑鱼","sci":"Epinephelus nigritus","family":"鮨科","family_en":"Serranidae","cat":"more","py":"qianheishibanyu qhsby","order":"鲈形目","order_en":"Perciformes"},
 {"id":1212,"name":"清亮镖鲈","name_en":"Western sand darter","sci":"Ammocrypta clara","family":"鲈科","family_en":"Percidae","cat":"more","py":"qingliangbiaolu qlbl","order":"鲈形目","order_en":"Perciformes","iucn":"VU"},
 {"id":1213,"name":"清水石斑鱼","name_en":"Camouflage grouper","sci":"Epinephelus polyphekadion","family":"鮨科","family_en":"Serranidae","cat":"more","py":"qingshuishibanyu qssby","order":"鲈形目","order_en":"Perciformes","iucn":"VU"},
 {"id":1214,"name":"渡边月蝶鱼","sci":"Genicanthus watanabei","family":"盖刺鱼科","family_en":"Pomacanthidae","cat":"more","py":"dubianyuedieyu dbydy","order":"刺尾鲷目","order_en":"Acanthuriformes","iucn":"LC"},
@@ -1363,7 +1361,6 @@ window.FISH_DATA = [
 {"id":1361,"name":"皮氏叫姑鱼","sci":"Johnius belangerii","family":"石首鱼科","family_en":"Sciaenidae","cat":"more","py":"pishijiaoguyu psjgy","order":"鲈形目","order_en":"Perciformes","iucn":"LC"},
 {"id":1362,"name":"皮氏锯鲂鮄","sci":"Prionotus beanii","family":"角鱼科","family_en":"Triglidae","cat":"more","py":"pishijufangfu psjff","order":"鲉形目","order_en":"Scorpaeniformes","iucn":"LC"},
 {"id":1363,"name":"皮须小鲉","sci":"Scorpaenodes crossotus","family":"鲉科","family_en":"Scorpaenidae","cat":"more","py":"pixuxiaoyou pxxy","order":"鲉形目","order_en":"Scorpaeniformes"},
-{"id":1364,"name":"皮须鲉","sci":"Thysanichthys crossotus","family":"鲉科","family_en":"Scorpaenidae","cat":"more","py":"pixuyou pxy","order":"鲉形目","order_en":"Scorpaeniformes"},
 {"id":1365,"name":"盔姥鲈","sci":"Enoplosus armatus","family":"姥鲈科","family_en":"Enoplosidae","cat":"more","py":"kuilaolu kll","order":"日鲈目","order_en":"Centrarchiformes","iucn":"LC"},
 {"id":1366,"name":"盔裸棘杜父鱼","sci":"Gymnocanthus galeatus","family":"杜父鱼科","family_en":"Cottidae","cat":"more","py":"kuiluojidufuyu kljdfy","order":"鲈形目","order_en":"Perciformes"},
 {"id":1367,"name":"盘孔喉盘鱼","sci":"Discotrema crinophilum","family":"喉盘鱼科","family_en":"Gobiesocidae","cat":"more","py":"pankonghoupanyu pkhpy","order":"喉盘鱼目","order_en":"Gobiesociformes","iucn":"LC"},
@@ -1709,7 +1706,6 @@ window.FISH_DATA = [
 {"id":1707,"name":"荫云高鳍䱛","sci":"Pareques umbrosus","family":"石首鱼科","family_en":"Sciaenidae","cat":"more","py":"yinyungaoqi yygq","order":"鲈形目","order_en":"Perciformes","iucn":"LC"},
 {"id":1708,"name":"薄唇鮻","name_en":"Thinlip mullet","sci":"Liza ramada","family":"鲻科","family_en":"Mugilidae","cat":"more","py":"baochunsuo bcs","order":"鲻形目","order_en":"Mugiliformes"},
 {"id":1709,"name":"薄舞花鮨","sci":"Choranthias tenuis","family":"鮨科","family_en":"Serranidae","cat":"more","py":"baowuhuayi bwhy","order":"鲈形目","order_en":"Perciformes","iucn":"LC"},
-{"id":1710,"name":"薄花鮨","sci":"Anthias tenuis","family":"鮨科","family_en":"Serranidae","cat":"more","py":"baohuayi bhy","order":"鲈形目","order_en":"Perciformes"},
 {"id":1711,"name":"薛氏凡鲻","name_en":"Bluespot mullet","sci":"Moolgarda seheli","family":"鲻科","family_en":"Mugilidae","cat":"more","py":"xueshifanzi xsfz","order":"鲻形目","order_en":"Mugiliformes"},
 {"id":1712,"name":"萨凡纳镖鲈","sci":"Etheostoma fricksium","family":"鲈科","family_en":"Percidae","cat":"more","py":"safannabiaolu sfnbl","order":"鲈形目","order_en":"Perciformes","iucn":"LC"},
 {"id":1713,"name":"萨哈林小眼八角鱼","sci":"Brachyopsis segaliensis","family":"八角鱼科","family_en":"Agonidae","cat":"more","py":"sahalinxiaoyanbajiaoyu shlxybjy","order":"鲈形目","order_en":"Perciformes"},
@@ -1950,7 +1946,6 @@ window.FISH_DATA = [
 {"id":1949,"name":"长吻布洛赫鱼","sci":"Blochius longirostris","family":"布洛赫鱼科","family_en":"Blochiidae","cat":"more","py":"changwenbuluoheyu cwblhy","order":"鲈形目","order_en":"Perciformes"},
 {"id":1950,"name":"长拟花鮨","sci":"Pseudanthias elongatus","family":"鮨科","family_en":"Serranidae","cat":"more","py":"changnihuayi cnhy","order":"鲈形目","order_en":"Perciformes","iucn":"LC"},
 {"id":1951,"name":"长棘小鲉","sci":"Scorpaenodes scaber","family":"鲉科","family_en":"Scorpaenidae","cat":"more","py":"changjixiaoyou cjxy","order":"鲉形目","order_en":"Scorpaeniformes","iucn":"DD"},
-{"id":1952,"name":"长棘钝顶鲉","sci":"Amblyapistus macracanthus","family":"真裸皮鲉科","family_en":"Tetrarogidae","cat":"more","py":"changjidundingyou cjddy","order":"鲉形目","order_en":"Scorpaeniformes"},
 {"id":1953,"name":"长线六线鱼","sci":"Hexagrammos lagocephalus","family":"六线鱼科","family_en":"Hexagrammidae","cat":"more","py":"changxianliuxianyu cxlxy","order":"鲉形目","order_en":"Scorpaeniformes","iucn":"LC"},
 {"id":1954,"name":"长须髭鲷","sci":"Hapalogenys sennin","family":"髭鲷科","family_en":"Hapalogenyidae","cat":"more","py":"changxuzidiao cxzd","order":"松鲷目","order_en":"Lobotiformes"},
 {"id":1955,"name":"长鳍莫鲻","sci":"Moolgarda cunnesius","family":"鲻科","family_en":"Mugilidae","cat":"more","py":"changqimozi cqmz","order":"鲻形目","order_en":"Mugiliformes"},
@@ -2074,7 +2069,6 @@ window.FISH_DATA = [
 {"id":2073,"name":"马氏刺北鳚","sci":"Acantholumpenus mackayi","family":"线鳚科","family_en":"Stichaeidae","cat":"more","py":"mashicibeiwei mscbw","order":"鲈形目","order_en":"Perciformes"},
 {"id":2074,"name":"马氏鳞鳍梅鲷","sci":"Pterocaesio marri","family":"乌尾鮗科","family_en":"Caesionidae","cat":"more","py":"mashilinqimeidiao mslqmd","order":"鲈形目","order_en":"Perciformes","iucn":"LC"},
 {"id":2075,"name":"驼背拟鲉","sci":"Scorpaenopsis gibbosa","family":"鲉科","family_en":"Scorpaenidae","cat":"more","py":"tuobeiniyou tbny","order":"鲉形目","order_en":"Scorpaeniformes","iucn":"LC"},
-{"id":2076,"name":"驼背鲈","sci":"Chromileptes altivelis","family":"石斑鱼科","family_en":"Epinephelidae","cat":"more","py":"tuobeilu tbl","order":"鲈形目","order_en":"Perciformes"},
 {"id":2077,"name":"高吻拟鲉","sci":"Scorpaenopsis altirostris","family":"鲉科","family_en":"Scorpaenidae","cat":"more","py":"gaowenniyou gwny","order":"鲉形目","order_en":"Scorpaeniformes","iucn":"LC"},
 {"id":2078,"name":"高棘棘花鮨","sci":"Plectranthias altipinnatus","family":"鮨科","family_en":"Serranidae","cat":"more","py":"gaojijihuayi gjjhy","order":"鲈形目","order_en":"Perciformes","iucn":"LC"},
 {"id":2079,"name":"高知粗鳞鲬","sci":"Stlengis osensis","family":"杜父鱼科","family_en":"Cottidae","cat":"more","py":"gaozhiculinyong gzcly","order":"鲈形目","order_en":"Perciformes"},
@@ -3686,7 +3680,6 @@ window.FISH_DATA = [
 {"id":3690,"name":"多棘梳钩鲶","sci":"Peckoltia multispinis","family":"骨甲鲶科","family_en":"Loricariidae","cat":"more","py":"duojishugounian djsgn","order":"鲇形目","order_en":"Siluriformes","iucn":"DD"},
 {"id":3691,"name":"多棘乌鲂","sci":"Pterycombus petersii","family":"乌鲂科","family_en":"Bramidae","cat":"more","py":"duojiwufang djwf","order":"鲭形目","order_en":"Scombriformes"},
 {"id":3692,"name":"多棘直口非鲫","sci":"Orthochromis polyacanthus","family":"丽鱼科","family_en":"Cichlidae","cat":"more","py":"duojizhikoufeiji djzkfj","order":"鳚形目","order_en":"Blenniiformes","iucn":"LC"},
-{"id":3693,"name":"多棘钩鲶","sci":"Ancistrus multispinis","family":"骨甲鲶科","family_en":"Loricariidae","cat":"more","py":"duojigounian djgn","order":"鲇形目","order_en":"Siluriformes","iucn":"LC"},
 {"id":3694,"name":"多棘马夫鱼","name_en":"Schooling bannerfish","sci":"Heniochus diphreutes","family":"蝴蝶鱼科","family_en":"Chaetodontidae","cat":"more","py":"duojimafuyu djmfy","order":"蝴蝶鱼目","order_en":"Chaetodontiformes","iucn":"LC"},
 {"id":3695,"name":"多棘黏滑光鼻鲇","sci":"Glaphyropoma spinosum","family":"毛鼻鲶科","family_en":"Trichomycteridae","cat":"more","py":"duojinianhuaguangbinian djnhgbn","order":"鲇形目","order_en":"Siluriformes","iucn":"VU"},
 {"id":3696,"name":"多横斑拟鲈","sci":"Parapercis multifasciata","family":"虎鱚科","family_en":"Pinguipedidae","cat":"more","py":"duohengbannilu dhbnl","order":"䲢形目","order_en":"Uranoscopiformes","iucn":"LC"},
@@ -4001,7 +3994,6 @@ window.FISH_DATA = [
 {"id":4005,"name":"大鳞新灯鱼","sci":"Neoscopelus macrolepidotus","family":"新灯笼鱼科","family_en":"Neoscopelidae","cat":"more","py":"dalinxindengyu dlxdy","order":"灯笼鱼目","order_en":"Myctophiformes","iucn":"LC"},
 {"id":4006,"name":"大鳞结鱼","sci":"Tor douronensis","family":"鲤科","family_en":"Cyprinidae","cat":"more","py":"dalinjieyu dljy","order":"鲤形目","order_en":"Cypriniformes"},
 {"id":4007,"name":"大鳞舌鳎","sci":"Cynoglossus macrolepidotus","family":"舌鳎科","family_en":"Cynoglossidae","cat":"more","py":"dalinsheta dlst","order":"鲽形目","order_en":"Pleuronectiformes","iucn":"DD"},
-{"id":4008,"name":"大鳞连鳍鱼","sci":"Novaculichthys macrolepidotus","family":"隆头鱼科","family_en":"Labridae","cat":"more","py":"dalinlianqiyu dllqy","order":"隆头鱼目","order_en":"Labriformes","iucn":"LC"},
 {"id":4009,"name":"大鳞鲃","sci":"Luciobarbus capito","family":"鲤科","family_en":"Cyprinidae","cat":"more","py":"dalinba dlb","order":"鲤形目","order_en":"Cypriniformes","iucn":"VU"},
 {"id":4010,"name":"大鳞鳞孔鲷","sci":"Scopelogadus mizolepis","family":"孔头鲷科","family_en":"Melamphaidae","cat":"more","py":"dalinlinkongdiao dllkd","order":"奇鲷目","order_en":"Stephanoberyciformes","iucn":"LC"},
 {"id":4011,"name":"大鹦鳚","sci":"Scartichthys gigas","family":"鳚科","family_en":"Blenniidae","cat":"more","py":"dayingwei dyw","order":"鳚形目","order_en":"Blenniiformes","iucn":"LC"},
@@ -4178,7 +4170,6 @@ window.FISH_DATA = [
 {"id":4184,"name":"安德森电鳐","name_en":"Florida torpedo","sci":"Torpedo andersoni","family":"电鳐科","family_en":"Torpedinidae","cat":"more","py":"andesendianyao adsdy","order":"电鳐目","order_en":"Torpediniformes","iucn":"LC"},
 {"id":4185,"name":"安戈尔胡鲶","sci":"Clarias angolensis","family":"塘虱鱼科","family_en":"Clariidae","cat":"more","py":"angeerhunian agehn","order":"鲇形目","order_en":"Siluriformes","iucn":"LC"},
 {"id":4186,"name":"安格斯迪鲨","sci":"Carcharocles angustidens","family":"耳齿鲨科","family_en":"Otodontidae","cat":"more","py":"angesidisha agsds","order":"鼠鲨目","order_en":"Lamniformes"},
-{"id":4187,"name":"安格斯迪鲨","sci":"Otodus angustidens","family":"耳齿鲨科","family_en":"Otodontidae","cat":"more","py":"angesidisha agsds","order":"鼠鲨目","order_en":"Lamniformes"},
 {"id":4188,"name":"安比兵鲶","name_en":"spotted corydoras","sci":"Corydoras ambiacus","family":"美鲶科","family_en":"Callichthyidae","cat":"more","py":"anbibingnian abbn","order":"鲇形目","order_en":"Siluriformes"},
 {"id":4189,"name":"安氏克奈鱼","sci":"Kneria ansorgii","family":"尼罗鱼科","family_en":"Kneriidae","cat":"more","py":"anshikenaiyu askny","order":"鼠鱚目","order_en":"Gonorynchiformes","iucn":"DD"},
 {"id":4190,"name":"安氏刺鳅","sci":"Mastacembelus ansorgii","family":"刺鳅科","family_en":"Mastacembelidae","cat":"more","py":"anshiciqiu ascq","order":"合鳃目","order_en":"Synbranchiformes","iucn":"DD"},
